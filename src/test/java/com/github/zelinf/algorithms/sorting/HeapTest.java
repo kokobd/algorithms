@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RunWith(JUnitQuickcheck.class)
 public class HeapTest {
@@ -32,8 +34,12 @@ public class HeapTest {
         List<Integer> unordered = new ArrayList<>(list);
         for (int i = 0; i < 10; i++) {
             Collections.shuffle(unordered);
-            List<Integer> heap = new Heap<>(unordered).getList();
-            Assert.assertTrue(Heap.isHeap(heap));
+            Heap<Integer> heap = new Heap<>(unordered);
+            List<Integer> heapList = Stream.iterate(0, x -> x + 1)
+                    .limit(heap.size())
+                    .map(heap::get)
+                    .collect(Collectors.toList());
+            Assert.assertTrue(Heap.isHeap(heapList));
         }
     }
 }
